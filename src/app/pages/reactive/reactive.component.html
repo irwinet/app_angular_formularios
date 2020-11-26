@@ -6,17 +6,19 @@
 
         <div class="form-group row">
             <label class="col-2 col-form-label">Nombre</label>
-            <div class="col-8">
-
-                <input formControlName="nombre" class="form-control" type="text" placeholder="Nombre">
+            <div class="col">
+                <!-- forma.get('nombre').invalid && forma.get('nombre').touched -->
+                <input [class.is-invalid]="nombreNoValido" formControlName="nombre" class="form-control" type="text" placeholder="Nombre">
+                <small *ngIf="nombreNoValido" class="text-danger">Ingrese 5 letras</small>
             </div>
         </div>
 
         <div class="form-group row">
             <label class="col-2 col-form-label">Apellido</label>
-            <div class="col-8">
+            <div class="col">
 
-                <input formControlName="apellido" class="form-control" type="text" placeholder="Apellido">
+                <input [class.is-invalid]="apellidoNoValido" formControlName="apellido" class="form-control" type="text" placeholder="Apellido">
+                <small *ngIf="apellidoNoValido" class="text-danger">Ingrese 5 letras</small>
             </div>
         </div>
 
@@ -24,17 +26,29 @@
 
     <div class="form-group row">
         <label class="col-2 col-form-label">Correo</label>
-        <div class="col-8">
+        <div class="col">
 
-            <input formControlName="correo" class="form-control" type="email" placeholder="Correo electrónico">
+            <input [class.is-invalid]="correoNoValido" formControlName="correo" class="form-control" type="email" placeholder="Correo electrónico">
+            <small *ngIf="correoNoValido" class="text-danger">Ingrese el correo</small>
+        </div>
+    </div>
+
+    <div class="form-group row" formGroupName="direccion">
+        <label class="col-2 col-form-label">Direccion</label>
+        <div class="form-row col">
+            <div class="col">
+                <input formControlName="distrito" type="text" class="form-control" placeholder="Distrito">
+            </div>
+            <div class="col">
+                <input formControlName="ciudad" type="text" class="form-control" placeholder="Ciudad">
+            </div>
         </div>
     </div>
 
 
-
     <div class="form-group row">
         <label class="col-2 col-form-label">&nbsp;</label>
-        <div class="input-group col-md-8">
+        <div class="input-group col-md">
             <button type="submit" class="btn btn-outline-primary btn-block">
         Guardar
       </button>
