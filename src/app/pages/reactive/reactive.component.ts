@@ -1,6 +1,5 @@
-import { ClassField } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-reactive',
@@ -12,10 +11,15 @@ export class ReactiveComponent implements OnInit {
   forma: FormGroup;
 
   constructor(private fb: FormBuilder) {
-    this.crearFormulario()
+    this.crearFormulario();
+    this.cargarDataAlFormulario();
   }
 
   ngOnInit(): void {
+  }
+
+  get pasatiempos(){
+    return this.forma.get('pasatiempos') as FormArray;
   }
 
   get nombreNoValido(){
@@ -30,6 +34,14 @@ export class ReactiveComponent implements OnInit {
     return this.forma.get('correo').invalid && this.forma.get('correo').touched;
   }
 
+  get distritoNoValido(){
+    return this.forma.get('direccion.distrito').invalid && this.forma.get('direccion.distrito').touched;
+  }
+
+  get ciudadNoValido(){
+    return this.forma.get('direccion.ciudad').invalid && this.forma.get('direccion.ciudad').touched;
+  }
+
   crearFormulario(){
     this.forma = this.fb.group({
       nombre  : ['', [Validators.required, Validators.minLength(5)]],
@@ -38,7 +50,32 @@ export class ReactiveComponent implements OnInit {
       direccion: this.fb.group({
         distrito: ['', Validators.required],
         ciudad: ['', Validators.required]
-      })
+      }),
+      pasatiempos: this.fb.array([
+        [],[]
+      ])
+    });
+  }
+
+  cargarDataAlFormulario(){
+    // this.forma.setValue({
+    //   nombre: 'Irwin',
+    //   apellido: 'Estrada',
+    //   correo: 'irwinet@hotmail.com',
+    //   direccion: {
+    //     distrito: 'San Juan de Miraflores',
+    //     ciudad: 'Lima'
+    //   }
+    // });
+
+    this.forma.reset({
+      nombre: 'Irwin',
+      apellido: 'Estrada',
+      correo: 'irwinet@hotmail.com',
+      direccion: {
+        distrito: 'San Juan de Miraflores',
+        ciudad: 'Lima'
+      }
     });
   }
 
@@ -47,8 +84,22 @@ export class ReactiveComponent implements OnInit {
 
     if(this.forma.invalid){ 
       return Object.values(this.forma.controls).forEach(control=>{        
-        control.markAsTouched();
+        
+        if(control instanceof FormGroup){
+          Object.values(control.controls).forEach(control => control.markAsTouched());
+        }
+        else{
+          control.markAsTouched();
+        }        
+        //console.log(control);
       });
     }
+
+
+    //Posteo de informacion CALL SERVICE
+    this.forma.reset({
+      nombre: 'Sin nombre'
+    });
+
   }
 }
